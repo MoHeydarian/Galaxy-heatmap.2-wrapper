@@ -16,7 +16,7 @@
     <inputs>
         <param name="input1" type="data" format="tabular" label="Input should have column headers - these will be the columns that are plotted"/>
         <param name="title" size="30" type="text" format="txt" label="Plot title"/> 
-        <param name=" keylabel" size="30" type="text" format="txt" label="key label"/> 
+        <param name="keylabel" size="30" type="text" format="txt" label="key label"/> 
         <conditional name="transformation">
             <param name="transform" type="select" label="Advanced - log transformation">
               <option value="none">Plot the data as it is</option>
