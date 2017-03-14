@@ -21,6 +21,7 @@ option_specification = matrix(c(
   'title', 't', 2, 'character',
   'transform', 'c', 2, 'character',
   'key', 'k', 2, 'character',
+  'colorscheme', 'z', 2, 'character',
   'output', 'o', 2, 'character'
   ), byrow=TRUE, ncol=4);
 
@@ -52,13 +53,18 @@ if(options$transform == "none"){
     }else{
 }
 
+if(options$colorscheme == "Default"){
+  colorscale = colfunc <- colorRampPalette(c("white", "red"))
+} else {
+  colorscale = colfunc <- colorRampPalette(c("blue","white", "red"))
+}
 
 
 hclust_fun = function(x) hclust(x, method="complete")
 dist_fun = function(x) dist(x, method="maximum")
 
 pdf(file="Rplot.pdf")
-colfunc <- colorRampPalette(c("white", "red"))
+colorscale
 heatmap.2(linput,
           distfun=dist_fun, hclustfun=hclust_fun, scale = "none",
           col=colfunc(50), trace="none", density.info = "none",labRow=FALSE, margins=c(8,2),
