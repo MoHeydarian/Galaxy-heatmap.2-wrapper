@@ -18,9 +18,9 @@ args <- commandArgs(trailingOnly = TRUE)
 # we read the options from the default: commandArgs(TRUE).
 option_specification = matrix(c(
   'input', 'i', 2, 'character',
-  'title', 't',2, 'character',
+  'title', 't', 2, 'character',
   'transform', 'c', 2, 'character',
-  'keylabel', 'k',2, 'character',
+  'key', 'k', 2, 'character',
   'output', 'o', 2, 'character'
   ), byrow=TRUE, ncol=4);
 
@@ -62,5 +62,5 @@ colfunc <- colorRampPalette(c("white", "red"))
 heatmap.2(linput,
           distfun=dist_fun, hclustfun=hclust_fun, scale = "none",
           col=colfunc(50), trace="none", density.info = "none",labRow=FALSE, margins=c(8,2),
-          main = options$title, key.xlab= options$keylabel, keysize=1)
+          main = options$title, key.xlab= options$key, keysize=1)
 dev.off()
