@@ -1,4 +1,4 @@
-<tool id="heatmap2" name="heatmap2" version="0.0.2">
+<tool id="heatmap2" name="heatmap2" version="0.0.7">
     <requirements>
         <requirement type="package">r-getopt</requirement>
         <requirement type="package">r-rcolorbrewer</requirement>
@@ -9,8 +9,8 @@
     </stdio>
     <command><![CDATA[
         Rscript ${__tool_directory__}/heatmap2.R --input "$input1" --title "$title" 
-        --key "$key" --colorscheme "$coloring.colorscheme"
-        --transform "$transformation.transform"
+        --key "$key" --colorscheme "$coloring.colorscheme" --cluster "$clustering.cluster"
+        --transform "$transformation.transform" --labels "$label.labels" --scale "$scaling.scale"
         --output "Rplot.pdf"
 
     ]]></command>
@@ -27,10 +27,32 @@
               <option value="log10plus1">Log10(value+1) transform my data</option>
             </param>
         </conditional>
+        <conditional name="clustering">
+            <param name="cluster" type="select" label="Clustering of data" >
+                <option value="Default" selected="True">Cluster my data</option>
+                <option value="Defined">Do not cluster my data</option>
+            </param>
+        </conditional>
+        <conditional name="label">
+            <param name="labels" type="select" label="Labeling columns and rows" >
+                <option value="both" selected="True">Label my columns and rows</option>
+                <option value="rows">Label rows and not columns</option>
+                <option value="columns">Label columns and not rows</option>
+                <option value="none">Do not label rows or columns</option>
+            </param>
+        </conditional>
         <conditional name="coloring">
             <param name="colorscheme" type="select" label="Coloring groups" >
-                <option value="Default" selected="True">White to red</option>
-                <option value="Defined">Blue to white to red</option>
+                <option value="whrd" selected="True">White to red</option>
+                <option value="whblu">White to blue</option>
+                <option value="blwhre">Blue to white to red</option>
+            </param>
+        </conditional>
+        <conditional name="scaling">
+            <param name="scale" type="select" label="Data scaling" >
+                <option value="none" selected="True">Do not scale my data</option>
+                <option value="row">Scale my data by row</option>
+                <option value="column">Scale my data by column</option>
             </param>
         </conditional>
     </inputs>

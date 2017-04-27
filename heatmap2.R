@@ -22,6 +22,9 @@ option_specification = matrix(c(
   'transform', 'c', 2, 'character',
   'key', 'k', 2, 'character',
   'colorscheme', 'z', 2, 'character',
+  'cluster', 'b', 2, 'character',
+  'labels', 'a', 2, 'character',
+  'scale', 'd', 2, 'character',
   'output', 'o', 2, 'character'
   ), byrow=TRUE, ncol=4);
 
@@ -37,9 +40,14 @@ cat("\n output: ",options$output)
 
 input <- read.delim(options$input,sep='\t',header=TRUE)
 
-mat_input <- data.matrix(input[,2:ncol(input)])  
+mat_input <- data.matrix(input[,2:ncol(input)])
+rownames(mat_input) <- input[,1]
 
 
+hclust_fun = function(x) hclust(x, method="complete")
+dist_fun = function(x) dist(x, method="maximum")
+distfun=dist_fun
+hclustfun=hclust_fun
 if(options$transform == "none"){
     linput <- mat_input
 }else if(options$transform == "log2"){
@@ -53,20 +61,53 @@ if(options$transform == "none"){
     }else{
 }
 
-if(options$colorscheme == "Default"){
+if(options$colorscheme == "whrd"){
   colorscale = colfunc <- colorRampPalette(c("white", "red"))
-} else {
+} else if(options$colorscheme == "whblu"){
+  colorscale = colfunc <- colorRampPalette(c("white", "blue"))
+}else if(options$colorscheme == "blwhre"){
   colorscale = colfunc <- colorRampPalette(c("blue","white", "red"))
+}else{
 }
 
 
-hclust_fun = function(x) hclust(x, method="complete")
-dist_fun = function(x) dist(x, method="maximum")
+
+
+if(options$labels== "both"){
+  rlabs = NULL
+  clabs = NULL
+}else if(options$labels== "rows"){
+  rlabs = NULL
+  clabs = FALSE
+}else if(options$labels== "columns"){
+  rlabs = FALSE
+  clabs = NULL
+}else if(options$labels== "none"){
+  rlabs = FALSE
+  clabs = FALSE
+} else{
+}
+
+
+
 
 pdf(file="Rplot.pdf")
 colorscale
+
+if(options$cluster== "Default"){
+
 heatmap.2(linput,
-          distfun=dist_fun, hclustfun=hclust_fun, scale = "none",
-          col=colfunc(50), trace="none", density.info = "none",labRow=FALSE, margins=c(8,2),
+          distfun=dist_fun, hclustfun=hclust_fun, scale = options$scale, labRow = rlabs, labCol = clabs,
+          col=colfunc(50), trace="none", density.info = "none", margins=c(8,2),
           main = options$title, key.xlab= options$key, keysize=1)
+}else{
+heatmap.2(linput,
+          dendrogram="none", scale = options$scale, labRow = rlabs, labCol = clabs,
+          col=colfunc(50), trace="none", density.info = "none", margins=c(8,2),
+          main = options$title, key.xlab= options$key, keysize=1)
+}
+
+
+
+
 dev.off()
